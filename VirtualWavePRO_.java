@@ -1,15 +1,18 @@
-// Author: Hernández, I. & Hernández-Fontes, J.
-// Date: 09/09/2016
-// Federal University of Rio de Janeiro at
-// Alberto Luiz Coimbra Institute for Graduate
-// Studies and Research in Engineering
-// Ocean Engineering Department
-// 
-// VirtualWavePRO_v.09.09.2016
-// 
-// Java Plugin for Heights mesurements in binary images
-// using binarized images and IJ particle analizer
+/**
+* Author: Hernández, I. & Hernández-Fontes, J. (2016)
+* 
+* Date: 09/09/2016; Federal University of Rio de Janeiro.
+* Alberto Luiz Coimbra Institute for Graduate Studies and
+* Research in Engineering.
+* Ocean Engineering Department
+* 
+* VirtualWavePRO_v.09.09.2016
+* 
+* Java Plugin for Heights mesurements in binary images
+* using binarized images and IJ particle analizer
+*/
 
+// Importing the necessary libraries from Java and IJ
 import ij.*;
 import ij.process.*;
 import ij.gui.*;
@@ -33,8 +36,9 @@ public class VirtualWavePRO_ implements PlugIn {
     static String knUNIT="1.000";
     static String uniTs="mm";
     static int roix1=0,roiy1=0,roiw=1,roih=1;
-    
+    // Analysis algorithm
     public void run(String arg) {
+        // Generic Dialog for custom inputs 
         GenericDialog gd = new GenericDialog("Virtual WavePRO by Hern\u00e1ndez & Hern\u00e1ndez-Fontes (2016).");
         gd.addStringField("Results Path: ", pthO,25);
         gd.addStringField("Min. Particle Size: ", minPS);
@@ -51,6 +55,7 @@ public class VirtualWavePRO_ implements PlugIn {
         gd.addMessage("COPPE/UFRJ (2016). All rigths are reserved.");
         gd.showDialog();
         if (gd.wasCanceled()) return;
+        // Initialize variables by Generic dialog data handling
         pthO = gd.getNextString();
         minPS = gd.getNextString();
         maxPS = gd.getNextString();
@@ -63,6 +68,7 @@ public class VirtualWavePRO_ implements PlugIn {
         knPIXS = gd.getNextString();
         knUNIT = gd.getNextString();
         uniTs = gd.getNextString();
+        // Getting and releasing the stack of images
         ImagePlus imp = IJ.getImage();
         // Here are defined the type o measurements of the plug-in
         IJ.run("Set Measurements...", "stack centroid redirect=None decimal=8");
@@ -76,6 +82,8 @@ public class VirtualWavePRO_ implements PlugIn {
         IJ.run(imp, "Set Scale...", "distance="+knPIXS+" known="+knUNIT+" unit="+uniTs);
         // Particle Analysis command using the embedded IJ classes
         IJ.run(imp, "Analyze Particles...", "  size="+minPS+"-"+maxPS+" circularity="+minPC+"-"+maxPC+" display clear stack");
+        // Saving the data in the Output path with the desidered extension in the
+        // form: data number, X, Y, Slice(Image Index) 
         IJ.saveAs("Results", pthO);
     }
 }
