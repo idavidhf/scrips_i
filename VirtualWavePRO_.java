@@ -1,6 +1,14 @@
-// Author: Hernández, Irving
-// v.06.09.2016
-// Java
+// Author: Hernández, I. & Hernández-Fontes, J.
+// Date: 09/09/2016
+// Federal University of Rio de Janeiro at
+// Alberto Luiz Coimbra Institute for Graduate
+// Studies and Research in Engineering
+// Ocean Engineering Department
+// 
+// VirtualWavePRO_v.09.09.2016
+// 
+// Java Plugin for Heights mesurements in binary images
+// using binarized images and IJ particle analizer
 
 import ij.*;
 import ij.process.*;
@@ -41,7 +49,6 @@ public class VirtualWavePRO_ implements PlugIn {
         gd.addStringField("Known dimension (units): ", knUNIT);
         gd.addStringField("Used Units: ", uniTs);
         gd.addMessage("COPPE/UFRJ (2016). All rigths are reserved.");
-        //gd.addNumericField("M\u00e1n. Particle Size: ", height, 0);
         gd.showDialog();
         if (gd.wasCanceled()) return;
         pthO = gd.getNextString();
@@ -56,15 +63,18 @@ public class VirtualWavePRO_ implements PlugIn {
         knPIXS = gd.getNextString();
         knUNIT = gd.getNextString();
         uniTs = gd.getNextString();
-        //height = (int)gd.getNextNumber();
-        
-        // Here begins the measurements
         ImagePlus imp = IJ.getImage();
+        // Here are defined the type o measurements of the plug-in
         IJ.run("Set Measurements...", "stack centroid redirect=None decimal=8");
         Prefs.blackBackground = false;
+        // Images needs to be binary before the analysis
         IJ.run(imp, "Make Binary", "method=Otsu background=Light calculate");
+        // ROI definition by rectangle in the form (x1, y1, Width , Height)
         imp.setRoi(roix1,roiy1,roiw,roih);
+        // Are considered unwarped images for the analysis process, then this is the
+        // pixel to real unit relationship by an known measurement of teh images
         IJ.run(imp, "Set Scale...", "distance="+knPIXS+" known="+knUNIT+" unit="+uniTs);
+        // Particle Analysis command using the embedded IJ classes
         IJ.run(imp, "Analyze Particles...", "  size="+minPS+"-"+maxPS+" circularity="+minPC+"-"+maxPC+" display clear stack");
         IJ.saveAs("Results", pthO);
     }
