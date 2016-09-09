@@ -6,12 +6,15 @@
 // Language: Java
 // Project: FIJI/ImageJ plug-in for Virtual-WavePRO
 
+
+// Importing only the necessary libraries
 import ij.*;
 import ij.process.*;
 import ij.gui.*;
 import java.awt.*;
 import ij.plugin.*;
 
+// Release the class (consider to finalize the name with underscore "_")
 public class SingleWP_ implements PlugIn {
 
 	public void run(String arg) {
@@ -31,6 +34,8 @@ public class SingleWP_ implements PlugIn {
 		// these coordinates correspond to the top left and the bottom rigth
 		// vertex of the rectangle
 		imp.setRoi(215,57,319,486);
+		// Particle analysis will be check all particles sizes, to filter
+		// noise particles, use the "circularity" parameter range. 
 		IJ.run(imp, "Analyze Particles...", "  circularity=0.00-0.99 display clear stack");
 		IJ.saveAs("Results", "C:\\WavePro\\frames\\Out_data.xls");
 	}
